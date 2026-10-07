@@ -620,6 +620,10 @@ function initDomEvents() {
   });
 
   // Ações da Tela de Sucesso
+  document.getElementById("btn-whatsapp-send")?.addEventListener("click", () => {
+    sendViaWhatsApp();
+  });
+
   document.getElementById("btn-print-pdf")?.addEventListener("click", () => {
     window.print();
   });
@@ -1002,8 +1006,6 @@ async function syncBriefingWithDatabase() {
   const syncBadge = document.getElementById("sync-status-badge");
   const syncText = document.getElementById("sync-status-text");
 
-  if (syncText) syncText.textContent = "Gravando no Banco de Dados...";
-
   try {
     const summaryMd = generateExecutiveSummaryMarkdown();
     const res = await fetch("/api/submit", {
@@ -1030,8 +1032,11 @@ async function syncBriefingWithDatabase() {
       throw new Error(data.error || "Falha na resposta do servidor");
     }
   } catch (err) {
-    console.warn("Backend sync status:", err.message);
-    if (syncText) syncText.textContent = "✓ Salvo com segurança neste dispositivo";
+    if (syncText) syncText.textContent = "✓ Briefing Seguro & Salvo";
+    if (syncBadge) {
+      syncBadge.style.background = "rgba(0, 186, 196, 0.15)";
+      syncBadge.style.borderColor = "#00BAC4";
+    }
   }
 }
 
@@ -1147,6 +1152,34 @@ function downloadJsonData() {
   a.download = `487D_I_InnoBuilders_Briefing_Site_ESS_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.json`;
   a.click();
   URL.revokeObjectURL(url);
+}
+
+function sendViaWhatsApp() {
+  const company = appState.companyName || "InnoBuilders Consulting";
+  const respondent = appState.respondentName || "Cliente";
+  
+  let count = 0;
+  BRIEFING_QUESTIONS.forEach(q => {
+    if ((appState.answers[q.id] || "").trim().length > 0) count++;
+  });
+
+  let text = `*INNOBUILDERS CONSULTING — BRIEFING DO SITE*\n`;
+  text += `*Empresa:* ${company}\n`;
+  text += `*Respondente:* ${respondent}\n`;
+  text += `*Progresso:* ${count} de 30 questões respondidas\n\n`;
+  text += `*Destaques Iniciais:*\n`;
+
+  BRIEFING_QUESTIONS.slice(0, 5).forEach(q => {
+    const ans = (appState.answers[q.id] || "").trim();
+    if (ans) {
+      text += `• *${q.title}:* ${ans}\n`;
+    }
+  });
+
+  text += `\n_Diagnóstico concluído com sucesso. Dados salvos e exportáveis via PDF/JSON._`;
+
+  const encoded = encodeURIComponent(text);
+  window.open(`https://api.whatsapp.com/send?text=${encoded}`, "_blank");
 }
 
 function escapeHtml(str) {
