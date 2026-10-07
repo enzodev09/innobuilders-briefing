@@ -1006,6 +1006,36 @@ async function syncBriefingWithDatabase() {
   const syncBadge = document.getElementById("sync-status-badge");
   const syncText = document.getElementById("sync-status-text");
 
+  // Salva no banco de dados local do Admin
+  try {
+    let count = 0;
+    BRIEFING_QUESTIONS.forEach(q => {
+      if ((appState.answers[q.id] || "").trim().length > 0) count++;
+    });
+
+    const submissionPayload = {
+      id: "IB-" + Math.floor(1000 + Math.random() * 9000),
+      timestamp: new Date().toISOString(),
+      respondentName: appState.respondentName || "Cliente InnoBuilders",
+      companyName: appState.companyName || "InnoBuilders Consulting",
+      contact: appState.contact || "",
+      answersCount: count,
+      answers: appState.answers
+    };
+
+    const adminStorageKey = "innobuilders_admin_submissions_v1";
+    let existingList = [];
+    try {
+      const raw = localStorage.getItem(adminStorageKey);
+      if (raw) existingList = JSON.parse(raw);
+    } catch(e) {}
+    existingList = existingList.filter(s => s.id !== submissionPayload.id);
+    existingList.unshift(submissionPayload);
+    localStorage.setItem(adminStorageKey, JSON.stringify(existingList));
+  } catch(e) {
+    console.warn("Admin local store update error:", e);
+  }
+
   try {
     const summaryMd = generateExecutiveSummaryMarkdown();
     const res = await fetch("/api/submit", {
@@ -1032,7 +1062,7 @@ async function syncBriefingWithDatabase() {
       throw new Error(data.error || "Falha na resposta do servidor");
     }
   } catch (err) {
-    if (syncText) syncText.textContent = "✓ Briefing Seguro & Salvo";
+    if (syncText) syncText.textContent = "✓ Briefing Seguro & Gravado no Painel";
     if (syncBadge) {
       syncBadge.style.background = "rgba(0, 186, 196, 0.15)";
       syncBadge.style.borderColor = "#00BAC4";
@@ -1163,20 +1193,37 @@ function sendViaWhatsApp() {
     if ((appState.answers[q.id] || "").trim().length > 0) count++;
   });
 
+  const submissionPayload = {
+    id: "IB-" + Math.floor(1000 + Math.random() * 9000),
+    timestamp: new Date().toISOString(),
+    respondentName: respondent,
+    companyName: company,
+    contact: appState.contact || "",
+    answersCount: count,
+    answers: appState.answers
+  };
+
+  let adminMagicLink = "https://briefing.487digital.com/admin.html";
+  try {
+    const b64 = btoa(encodeURIComponent(JSON.stringify(submissionPayload)));
+    adminMagicLink = `https://briefing.487digital.com/admin.html?lead=${b64}`;
+  } catch(e) {}
+
   let text = `*INNOBUILDERS CONSULTING — BRIEFING DO SITE*\n`;
   text += `*Empresa:* ${company}\n`;
   text += `*Respondente:* ${respondent}\n`;
   text += `*Progresso:* ${count} de 30 questões respondidas\n\n`;
   text += `*Destaques Iniciais:*\n`;
 
-  BRIEFING_QUESTIONS.slice(0, 5).forEach(q => {
+  BRIEFING_QUESTIONS.slice(0, 4).forEach(q => {
     const ans = (appState.answers[q.id] || "").trim();
     if (ans) {
       text += `• *${q.title}:* ${ans}\n`;
     }
   });
 
-  text += `\n_Diagnóstico concluído com sucesso. Dados salvos e exportáveis via PDF/JSON._`;
+  text += `\n👉 *Ver Todas as 30 Respostas no Painel Admin:*\n${adminMagicLink}\n\n`;
+  text += `_Diagnóstico finalizado com sucesso pela 487 Digital._`;
 
   const encoded = encodeURIComponent(text);
   window.open(`https://api.whatsapp.com/send?text=${encoded}`, "_blank");

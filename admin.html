@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InnoBuilders Consulting — Painel Executivo de Briefings (Admin)</title>
+  <link rel="icon" type="image/png" href="assets/favicon-ib.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=SFMono-Regular&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8faf9;
+      --card: #ffffff;
+      --text: #0b1113;
+      --text-dim: #5c6b70;
+      --teal: #00aeb8;
+      --teal-dark: #007e86;
+      --teal-soft: #e3f8f8;
+      --border: #e2e7e6;
+      --shadow: 0 16px 48px rgba(18,36,39,.06);
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      padding: 0 24px 60px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 92px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 16px; }
+    .brand img { width: 112px; height: 36px; object-fit: contain; filter: brightness(.18); }
+    .brand-title { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; }
+    .brand-subtitle { font-size: 12px; color: var(--text-dim); }
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--teal-soft);
+      border: 1px solid rgba(0,174,184,.25);
+      color: var(--teal-dark);
+      border-radius: 980px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .dot-live { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 8px var(--teal); }
+    
+    .btn-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 160ms ease;
+      cursor: pointer;
+    }
+    .btn-outline {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+    }
+    .btn-outline:hover {
+      border-color: var(--teal);
+      color: var(--teal-dark);
+      transform: translateY(-1px);
+    }
+    .btn-primary {
+      background: var(--text);
+      color: #fff;
+      border: 1px solid var(--text);
+    }
+    .btn-primary:hover {
+      background: var(--teal-dark);
+      border-color: var(--teal-dark);
+      transform: translateY(-1px);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 6px 20px rgba(18,36,39,.03);
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--teal), transparent);
+      opacity: 0.8;
+    }
+    .stat-num { font-size: 36px; font-weight: 700; color: var(--text); letter-spacing: -0.03em; }
+    .stat-lbl { font-size: 12px; color: var(--text-dim); margin-top: 6px; font-weight: 500; }
+    
+    /* Table Card */
+    .table-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .table-head {
+      padding: 20px 24px;
+      background: #fafcfb;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .table-title { font-size: 15px; font-weight: 700; }
+    .table-actions { display: flex; gap: 10px; align-items: center; }
+    .search-input {
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 12px;
+      outline: none;
+      min-width: 220px;
+    }
+    .search-input:focus { border-color: var(--teal); }
+    
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th {
+      padding: 14px 24px;
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+      background: #fafcfb;
+    }
+    td {
+      padding: 18px 24px;
+      font-size: 13px;
+      border-bottom: 1px solid #edf1f0;
+      vertical-align: middle;
+    }
+    tbody tr:hover td { background: #f8faf9; }
+    .badge-count {
+      display: inline-block;
+      padding: 4px 9px;
+      background: var(--teal-soft);
+      color: var(--teal-dark);
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .empty-msg {
+      text-align: center;
+      padding: 64px 20px;
+      color: var(--text-dim);
+    }
+    .empty-msg p { font-size: 15px; margin-bottom: 8px; }
+
+    /* Modal */
+    #detail-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(11,17,19,0.45);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 1000;
+      padding: 24px;
+      overflow-y: auto;
+    }
+    .modal-box {
+      max-width: 860px;
+      margin: 40px auto;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 36px;
+      box-shadow: 0 30px 100px rgba(15,33,36,.25);
+      animation: modal-in 240ms cubic-bezier(.2,.8,.2,1) both;
+    }
+    @keyframes modal-in {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-title { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+    .modal-sub { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 28px;
+      color: var(--text-dim);
+      cursor: pointer;
+      line-height: 1;
+      padding: 0 4px;
+    }
+    .modal-close:hover { color: var(--text); }
+    .phase-section { margin-bottom: 28px; }
+    .phase-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--teal-dark);
+      font-weight: 700;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--teal-soft);
+    }
+    .qa-item {
+      background: #fbfcfc;
+      border: 1px solid #edf1f0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+    }
+    .qa-q { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .qa-a { font-size: 13px; color: var(--teal-dark); font-weight: 500; }
+    .qa-a.empty { color: #9aa7ab; font-style: italic; }
+
+    @media (max-width: 768px) {
+      body { padding: 0 16px 40px; }
+      .header { flex-direction: column; align-items: flex-start; }
+      .table-card { overflow-x: auto; }
+      table { min-width: 720px; }
+      .modal-box { padding: 20px; margin: 16px auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Top Header -->
+    <header class="header">
+      <div class="brand">
+        <img src="assets/logo-innobuilders-cropped.png" alt="InnoBuilders Consulting">
+        <div>
+          <h1 class="brand-title">Painel Executivo de Briefings</h1>
+          <p class="brand-subtitle">487 Digital Engine &bull; Diagnósticos & Captação em Tempo Real</p>
+        </div>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <span class="badge-live"><span class="dot-live"></span> Nuvem Conectada 24/7</span>
+        <a href="index.html" class="btn-header btn-outline">← Ver Quiz ao Vivo</a>
+        <button type="button" class="btn-header btn-outline" onclick="exportAllJson()">Exportar Todos (.JSON)</button>
+        <button type="button" class="btn-header btn-primary" onclick="simulateNewSubmission()">+ Simular Envio Teste</button>
+      </div>
+    </header>
+
+    <!-- KPI Stats -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-total">0</div>
+        <div class="stat-lbl">Briefings Recebidos no Total</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-complete">0</div>
+        <div class="stat-lbl">Briefings 100% Completos (30 respostas)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-latest">-</div>
+        <div class="stat-lbl">Data / Hora do Último Envio</div>
+      </div>
+    </section>
+
+    <!-- Main Table -->
+    <main class="table-card">
+      <div class="table-head">
+        <span class="table-title">Histórico Geral de Submissões</span>
+        <div class="table-actions">
+          <input type="text" id="search-input" class="search-input" placeholder="Buscar por empresa, nome ou contato..." oninput="filterTable()">
+          <button type="button" class="btn-header btn-outline" onclick="loadSubmissions()">Atualizar</button>
+        </div>
+      </div>
+
+      <div id="table-container">
+        <!-- Injetado dinamicamente via JS -->
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Modal Detalhado de Respostas -->
+  <div id="detail-modal" onclick="if(event.target === this) closeModal()">
+    <div class="modal-box">
+      <div class="modal-header-row">
+        <div>
+          <h2 class="modal-title" id="modal-company-title">InnoBuilders Consulting</h2>
+          <p class="modal-sub" id="modal-meta-info">Respondido por ... em ...</p>
+        </div>
+        <button type="button" class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-bottom: 24px; flex-wrap:wrap;">
+        <button type="button" class="btn-header btn-primary" onclick="copyCurrentMarkdown()">Copiar Relatório em Markdown</button>
+        <button type="button" class="btn-header btn-outline" onclick="window.print()">Imprimir / Salvar em PDF</button>
+        <button type="button" class="btn-header btn-outline" onclick="downloadCurrentJson()">Baixar JSON Deste Briefing</button>
+      </div>
+
+      <div id="modal-answers-tree">
+        <!-- Injetado dinamicamente -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "innobuilders_admin_submissions_v1";
+
+    const BRIEFING_QUESTIONS_META = [
+      { id: 1, phase: 1, phaseName: "Fase 01 • Posicionamento Estratégico", title: "Qual é o modelo de negócio central da InnoBuilders?" },
+      { id: 2, phase: 1, phaseName: "Fase 01 • Posicionamento Estratégico", title: "Quais são os valores inegociáveis que o site deve transmitir?" },
+      { id: 3, phase: 1, phaseName: "Fase 01 • Posicionamento Estratégico", title: "Qual é o principal diferencial competitivo da InnoBuilders?" },
+      { id: 4, phase: 1, phaseName: "Fase 01 • Posicionamento Estratégico", title: "Qual o status atual dos ativos de identidade visual da marca?" },
+      { id: 5, phase: 1, phaseName: "Fase 01 • Posicionamento Estratégico", title: "Qual a percepção imediata desejada nos primeiros 3 segundos?" },
+      { id: 6, phase: 2, phaseName: "Fase 02 • Público-Alvo & ICP", title: "Quem é o tomador de decisão ideal (ICP) da InnoBuilders?" },
+      { id: 7, phase: 2, phaseName: "Fase 02 • Público-Alvo & ICP", title: "Qual é o porte e estágio das empresas clientes prioritárias?" },
+      { id: 8, phase: 2, phaseName: "Fase 02 • Público-Alvo & ICP", title: "Qual é a principal dor que leva o cliente a buscar a InnoBuilders?" },
+      { id: 9, phase: 2, phaseName: "Fase 02 • Público-Alvo & ICP", title: "Quais são as objeções mais comuns na etapa comercial?" },
+      { id: 10, phase: 2, phaseName: "Fase 02 • Público-Alvo & ICP", title: "Qual é o nível de maturidade técnica do público que navega no site?" },
+      { id: 11, phase: 3, phaseName: "Fase 03 • Arquitetura & UX", title: "Qual é o mapa de navegação essencial planejado para o site?" },
+      { id: 12, phase: 3, phaseName: "Fase 03 • Arquitetura & UX", title: "Como deve ser composto o Hero Header da página inicial?" },
+      { id: 13, phase: 3, phaseName: "Fase 03 • Arquitetura & UX", title: "Qual modelo de apresentação das soluções e serviços é o ideal?" },
+      { id: 14, phase: 3, phaseName: "Fase 03 • Arquitetura & UX", title: "Como a prova social e autoridade serão apresentadas no site?" },
+      { id: 15, phase: 3, phaseName: "Fase 03 • Arquitetura & UX", title: "Como a história e o propósito dos fundadores devem constar no site?" },
+      { id: 16, phase: 4, phaseName: "Fase 04 • Conteúdo & Tom de Voz", title: "Qual é o tom de voz predominante para o copywriting do site?" },
+      { id: 17, phase: 4, phaseName: "Fase 04 • Conteúdo & Tom de Voz", title: "Quais idiomas o site deve contemplar no lançamento e roadmap?" },
+      { id: 18, phase: 4, phaseName: "Fase 04 • Conteúdo & Tom de Voz", title: "Como será a produção e fornecimento dos textos definitivos?" },
+      { id: 19, phase: 4, phaseName: "Fase 04 • Conteúdo & Tom de Voz", title: "Quais ativos de imagem e mídia a empresa já possui disponíveis?" },
+      { id: 20, phase: 4, phaseName: "Fase 04 • Conteúdo & Tom de Voz", title: "O site terá um blog, central de artigos ou hub de insights?" },
+      { id: 21, phase: 5, phaseName: "Fase 05 • Conversão & Leads", title: "Qual é a Chamada para Ação (CTA) prioritária do site?" },
+      { id: 22, phase: 5, phaseName: "Fase 05 • Conversão & Leads", title: "Quais ferramentas de CRM ou automação devem ser integradas?" },
+      { id: 23, phase: 5, phaseName: "Fase 05 • Conversão & Leads", title: "Deseja oferecer materiais ricos ou iscas de qualificação?" },
+      { id: 24, phase: 5, phaseName: "Fase 05 • Conversão & Leads", title: "Qual o formato de integração do botão flutuante de WhatsApp?" },
+      { id: 25, phase: 5, phaseName: "Fase 05 • Conversão & Leads", title: "Quais campos são cruciais no formulário de contato do site?" },
+      { id: 26, phase: 6, phaseName: "Fase 06 • Engenharia & Infra", title: "Qual é a arquitetura tecnológica e stack preferida para o site?" },
+      { id: 27, phase: 6, phaseName: "Fase 06 • Engenharia & Infra", title: "Quais são os requisitos de conformidade jurídica e LGPD?" },
+      { id: 28, phase: 6, phaseName: "Fase 06 • Engenharia & Infra", title: "Quais são as metas de velocidade e Core Web Vitals do site?" },
+      { id: 29, phase: 6, phaseName: "Fase 06 • Engenharia & Infra", title: "Qual é o cronograma e prazo estimado desejado para publicação?" },
+      { id: 30, phase: 6, phaseName: "Fase 06 • Engenharia & Infra", title: "Qual o modelo desejado para manutenção e evolução contínua?" }
+    ];
+
+    let currentSelectedSubmission = null;
+
+    // Ingestão automática via Parâmetros de URL (?lead=... ou ?import=...)
+    function checkUrlIngestion() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const leadPayload = urlParams.get("lead") || urlParams.get("import");
+      if (leadPayload) {
+        try {
+          const decoded = JSON.parse(decodeURIComponent(atob(leadPayload)));
+          saveSubmissionToAdmin(decoded);
+          // Limpa o parâmetro da URL sem dar reload
+          window.history.replaceState({}, document.title, window.location.pathname);
+          viewDetails(decoded.id);
+        } catch (e) {
+          console.warn("Falha ao decodificar lead da URL:", e);
+        }
+      }
+    }
+
+    function getLocalSubmissions() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveSubmissionToAdmin(data) {
+      let list = getLocalSubmissions();
+      // Evita duplicidade por ID
+      list = list.filter(item => item.id !== data.id);
+      list.unshift(data);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      loadSubmissions();
+    }
+
+    function loadSubmissions() {
+      let list = getLocalSubmissions();
+
+      // Atualiza KPIs
+      document.getElementById("stat-total").textContent = list.length;
+      document.getElementById("stat-complete").textContent = list.filter(i => (i.answersCount || Object.keys(i.answers || {}).length) >= 28).length;
+      document.getElementById("stat-latest").textContent = list.length > 0 ? new Date(list[0].timestamp || Date.now()).toLocaleDateString('pt-BR') : '-';
+
+      renderTable(list);
+    }
+
+    function renderTable(list) {
+      const container = document.getElementById("table-container");
+      if (!list || list.length === 0) {
+        container.innerHTML = `
+          <div class="empty-msg">
+            <p><strong>Nenhum briefing recebido ainda.</strong></p>
+            <p>Assim que o cliente finalizar no link público ou enviar pelo WhatsApp, os dossiês aparecerão aqui em tempo real!</p>
+            <button class="btn-header btn-primary" style="margin-top:14px;" onclick="simulateNewSubmission()">Criar Briefing Demonstrativo</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Data / Hora</th>
+              <th>Respondente</th>
+              <th>Empresa</th>
+              <th>Contato</th>
+              <th>Respostas</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${list.map(item => {
+              const answersCount = item.answersCount || Object.keys(item.answers || {}).length;
+              return `
+                <tr>
+                  <td><strong>#${item.id || '1'}</strong></td>
+                  <td style="color:var(--text-dim); font-size:12px;">${new Date(item.timestamp || Date.now()).toLocaleString('pt-BR')}</td>
+                  <td><strong>${escapeHtml(item.respondentName || 'Diretoria')}</strong></td>
+                  <td>${escapeHtml(item.companyName || 'InnoBuilders Consulting')}</td>
+                  <td style="color:var(--teal); font-family:monospace;">${escapeHtml(item.contact || '(WhatsApp)')}</td>
+                  <td><span class="badge-count">${answersCount} / 30</span></td>
+                  <td>
+                    <button class="btn-header btn-primary" style="padding:6px 12px; font-size:11px;" onclick="viewDetails('${item.id}')">Ver Respostas</button>
+                    <button class="btn-header btn-outline" style="padding:6px 10px; font-size:11px; margin-left:4px; color:#c92a2a;" onclick="deleteSubmission('${item.id}')" title="Excluir">✕</button>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function viewDetails(id) {
+      const list = getLocalSubmissions();
+      const item = list.find(s => String(s.id) === String(id));
+      if (!item) return;
+
+      currentSelectedSubmission = item;
+      document.getElementById("modal-company-title").textContent = item.companyName || "InnoBuilders Consulting";
+      document.getElementById("modal-meta-info").textContent = `Respondente: ${item.respondentName || 'Diretoria'} • Contato: ${item.contact || '-'} • Data: ${new Date(item.timestamp || Date.now()).toLocaleString('pt-BR')}`;
+
+      // Agrupa por fases
+      const treeContainer = document.getElementById("modal-answers-tree");
+      const phases = [1, 2, 3, 4, 5, 6];
+      
+      treeContainer.innerHTML = phases.map(phNum => {
+        const qList = BRIEFING_QUESTIONS_META.filter(q => q.phase === phNum);
+        return `
+          <div class="phase-section">
+            <h3 class="phase-title">${qList[0].phaseName}</h3>
+            ${qList.map(q => {
+              const ans = (item.answers && item.answers[q.id]) || "";
+              return `
+                <div class="qa-item">
+                  <div class="qa-q">${q.id.toString().padStart(2, '0')}. ${q.title}</div>
+                  <div class="qa-a ${ans ? '' : 'empty'}">${ans ? escapeHtml(ans) : '(Não respondida)'}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById("detail-modal").style.display = "block";
+    }
+
+    function closeModal() {
+      document.getElementById("detail-modal").style.display = "none";
+    }
+
+    function deleteSubmission(id) {
+      if (!confirm("Deseja realmente excluir este registro de briefing?")) return;
+      let list = getLocalSubmissions();
+      list = list.filter(s => String(s.id) !== String(id));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      loadSubmissions();
+    }
+
+    function filterTable() {
+      const query = document.getElementById("search-input").value.toLowerCase();
+      const list = getLocalSubmissions();
+      const filtered = list.filter(item => {
+        return (item.respondentName || '').toLowerCase().includes(query) ||
+               (item.companyName || '').toLowerCase().includes(query) ||
+               (item.contact || '').toLowerCase().includes(query);
+      });
+      renderTable(filtered);
+    }
+
+    function copyCurrentMarkdown() {
+      if (!currentSelectedSubmission) return;
+      let md = `# INNOBUILDERS CONSULTING — BRIEFING DO SITE\n\n`;
+      md += `- **Empresa:** ${currentSelectedSubmission.companyName}\n`;
+      md += `- **Respondente:** ${currentSelectedSubmission.respondentName}\n`;
+      md += `- **Contato:** ${currentSelectedSubmission.contact}\n`;
+      md += `- **Data:** ${new Date(currentSelectedSubmission.timestamp).toLocaleString('pt-BR')}\n\n---\n\n`;
+
+      BRIEFING_QUESTIONS_META.forEach(q => {
+        const ans = (currentSelectedSubmission.answers && currentSelectedSubmission.answers[q.id]) || "";
+        md += `### [Fase 0${q.phase}] ${q.id.toString().padStart(2, '0')}. ${q.title}\n`;
+        md += `**Resposta:** ${ans || '*(Pendente)*'}\n\n`;
+      });
+
+      navigator.clipboard.writeText(md).then(() => {
+        alert("✓ Relatório executivo completo copiado para a área de transferência!");
+      });
+    }
+
+    function downloadCurrentJson() {
+      if (!currentSelectedSubmission) return;
+      const blob = new Blob([JSON.stringify(currentSelectedSubmission, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `487D_E_InnoBuilders_Briefing_${currentSelectedSubmission.id}_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportAllJson() {
+      const list = getLocalSubmissions();
+      const blob = new Blob([JSON.stringify(list, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `487D_I_InnoBuilders_Todos_Briefings_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function simulateNewSubmission() {
+      const mock = {
+        id: "IB-" + Math.floor(1000 + Math.random() * 9000),
+        timestamp: new Date().toISOString(),
+        respondentName: "Diretoria Executiva InnoBuilders",
+        companyName: "InnoBuilders Consulting",
+        contact: "contato@innobuilders.com",
+        answersCount: 30,
+        answers: {
+          1: "Consultoria Empresarial Estratégica & Gestão",
+          2: "Transparência Radical em Diagnósticos e Entregas",
+          3: "Metodologia 'Builder' Mão-na-Massa (Execução Real)",
+          4: "Logotipo Oficial Cromado com Monograma e Símbolo Radial",
+          5: "Autoridade Máxima e Solidez Corporativa Executiva",
+          6: "CEOs, Presidentes e Sócios-Fundadores",
+          7: "Grandes Empresas Consolidadas e Scale-ups em Crescimento",
+          8: "Estagnação de processos e necessidade de escala com tecnologia",
+          9: "Tempo de implementação e curva de adoção do time",
+          10: "Alta senioridade de negócios, buscam pragmatismo",
+          11: "Home Institucional, Soluções/Cases, Metodologia Builder, Sobre Nós, Contato Executivo",
+          12: "Headline de alto impacto com efeito Liquid Glass e call to action direta",
+          13: "Grid modular com cards interativos e métricas de ROI comprovadas",
+          14: "Logos de clientes atendidos, depoimentos em vídeo e números chave de eficiência",
+          15: "Linha do tempo interativa destacando a bagagem sênior dos fundadores",
+          16: "Sofisticado, direto ao ponto, assertivo e altamente profissional",
+          17: "Português e Inglês (foco em expansão internacional)",
+          18: "487 Digital lidera a estruturação da copy com validação dos sócios",
+          19: "Manual de marca inicial e logotipo em alta resolução",
+          20: "Hub de artigos e diagnósticos estratégicos para gerar autoridade orgânica",
+          21: "'Agendar Reunião Diagnóstica com um Sócio'",
+          22: "Notificação Direta por E-mail Institucional e WhatsApp Executivo",
+          23: "Quiz de Autoavaliação de Maturidade Corporativa",
+          24: "Botão Flutuante Sutil no Canto Inferior com Mensagem Prévia",
+          25: "Nome, E-mail Corporativo, WhatsApp, Empresa e Desafio Atual",
+          26: "Cloudflare Edge + Next.js / Static Ultra Rápido com Core Web Vitals 99+",
+          27: "Conformidade integral com LGPD e política de privacidade transparente",
+          28: "Carregamento abaixo de 1.2 segundos em qualquer conexão móvel",
+          29: "Lançamento em até 21 dias úteis",
+          30: "Suporte contínuo e evolução com a 487 Digital"
+        }
+      };
+      saveSubmissionToAdmin(mock);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // Inicialização
+    checkUrlIngestion();
+    loadSubmissions();
+  </script>
+</body>
+</html>
