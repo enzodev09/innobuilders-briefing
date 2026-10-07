@@ -1,0 +1,12 @@
+node_modules
+*.sqlite
+*.env
+*.exe
+*.yml
+submissions/
+preview-*.png
+qa-*.png
+*.py
+*.url
+487D_*
+!README.md

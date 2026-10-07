@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Formulário para Criação de Site da Empresa | InnoBuilders Consulting</title>
+  
+  <!-- Favicon oficial InnoBuilders -->
+  <link rel="icon" type="image/png" href="assets/favicon-ib.png">
+
+  <!-- Apple Design System Minimalista (Simplicidade, Clareza e Foco) -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="apple-theme-dark">
+  <a class="skip-link" href="#apple-stage">Pular para o conteúdo</a>
+
+  <!-- ===================================================================
+       BARRA SUPERIOR MINIMALISTA
+       =================================================================== -->
+  <header class="minimal-nav" id="apple-nav">
+    <!-- Linha de Progresso Contínua no Topo -->
+    <div class="progress-line-track" role="progressbar" aria-label="Progresso do briefing" aria-valuemin="1" aria-valuemax="30" aria-valuenow="1">
+      <div class="progress-line-fill" id="apple-progress-fill"></div>
+    </div>
+
+    <div class="nav-content">
+      <!-- Marca InnoBuilders -->
+      <button type="button" class="nav-brand" id="nav-brand-btn" title="Voltar ao início" aria-label="Voltar ao início">
+        <img src="assets/logo-innobuilders-cropped.png" alt="InnoBuilders" class="nav-logo">
+        <span class="nav-brand-name">InnoBuilders</span>
+      </button>
+
+      <!-- Fase Atual e Contador -->
+      <div class="nav-right">
+        <span class="nav-phase-tag" id="nav-phase-tag">Fase 1 • Posicionamento</span>
+        <span class="nav-step-count" id="nav-step-counter" aria-live="polite">1 de 30</span>
+        <button type="button" class="btn-index-ghost" id="btn-open-index" title="Ver todas as 30 perguntas">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+          <span>Índice</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================================
+       PALCO PRINCIPAL (CANVAS LIMPO E RESPONSIVO)
+       =================================================================== -->
+  <main class="minimal-stage" id="apple-stage">
+
+    <!-- ---------------------------------------------------------------
+         1. INTRODUÇÃO / ONBOARDING (SIMPLES, DIRETO E ELEGANTE)
+         --------------------------------------------------------------- -->
+    <section class="stage-view active" id="view-onboarding">
+      <div class="intro-centered">
+        
+        <!-- Logo Oficial Cromado da InnoBuilders -->
+        <div class="hero-logo-box">
+          <img src="assets/logo-innobuilders-cropped.png" alt="InnoBuilders Consulting" class="hero-brand-logo">
+        </div>
+
+        <div class="hero-pill-badge">
+          <span>Briefing estratégico &bull; Novo site</span>
+        </div>
+
+        <h1 class="intro-title">
+          Seu novo site começa com boas perguntas.
+        </h1>
+
+        <p class="intro-desc">
+          Em poucos minutos, vamos transformar contexto de negócio em uma direção clara para o novo site da <strong>InnoBuilders Consulting</strong>.
+        </p>
+
+        <div class="hero-art" aria-hidden="true">
+          <img src="assets/innobuilders-ribbon-3d.png" alt="">
+        </div>
+
+        <!-- Informações essenciais do fluxo -->
+        <div class="hero-feature-tags">
+          <div class="hero-tag-item">
+            <span class="tag-index" aria-hidden="true">01</span>
+            <span><strong>6 fases</strong> estratégicas</span>
+          </div>
+          <div class="hero-tag-item">
+            <span class="tag-index" aria-hidden="true">02</span>
+            <span><strong>~6 minutos</strong> de duração</span>
+          </div>
+          <div class="hero-tag-item">
+            <span class="tag-index" aria-hidden="true">03</span>
+            <span><strong>Salvamento</strong> automático</span>
+          </div>
+        </div>
+
+        <!-- Ação Principal Única -->
+        <div class="intro-action">
+          <button type="button" class="btn-primary-pill btn-hero-start" id="btn-start-briefing">
+            <span>Começar briefing</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+
+        <p class="intro-hint">
+          Sem cadastro &bull; use <strong>Enter ↵</strong> e as teclas <strong>1–4</strong>
+        </p>
+
+      </div>
+    </section>
+
+    <!-- ---------------------------------------------------------------
+         2. PERGUNTA ATIVA DO QUIZ (FOCADA, DIRETA, SEM CAIXAS PESADAS)
+         --------------------------------------------------------------- -->
+    <section class="stage-view" id="view-quiz">
+      <div class="question-flow-wrap" id="question-render-target">
+        <!-- Injetado dinamicamente pelo app.js -->
+      </div>
+    </section>
+
+    <!-- ---------------------------------------------------------------
+         3. SUCESSO & RELATÓRIO FINAL
+         --------------------------------------------------------------- -->
+    <section class="stage-view" id="view-success">
+      <div class="success-flow-wrap">
+        
+        <div class="success-top-card">
+          <div class="success-check-badge">✓</div>
+          <h1 class="success-title">Briefing Concluído com Sucesso</h1>
+          <p class="success-desc">
+            Todas as respostas para o novo site da <strong>InnoBuilders Consulting</strong> foram salvas e estruturadas.
+          </p>
+
+          <div class="success-stats">
+            <span class="stat-pill"><strong id="report-answered-count">30</strong> / 30 respondidas</span>
+            <span class="stat-pill">6 Fases Estratégicas</span>
+            <span class="stat-pill stat-db-sync" id="sync-status-badge">
+              <span class="sync-dot-live"></span>
+              <span id="sync-status-text">Gravando no Banco de Dados...</span>
+            </span>
+          </div>
+
+          <div class="success-buttons-row">
+            <button type="button" class="btn-primary-pill" id="btn-print-pdf">
+              <span>Imprimir / Salvar em PDF</span>
+            </button>
+            <button type="button" class="btn-secondary-pill" id="btn-copy-summary">
+              <span>Copiar Resumo em Texto</span>
+            </button>
+            <button type="button" class="btn-secondary-pill" id="btn-download-json">
+              <span>Baixar Arquivo JSON</span>
+            </button>
+            <button type="button" class="btn-secondary-pill" id="btn-edit-answers">
+              <span>Revisar Respostas</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Árvore com as Respostas -->
+        <div class="answers-tree" id="report-answers-tree">
+          <!-- Injetado dinamicamente -->
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================================================================
+       BARRA INFERIOR DE CONTROLES
+       =================================================================== -->
+  <footer class="minimal-toolbar" id="apple-toolbar">
+    <div class="toolbar-content">
+      
+      <!-- Voltar -->
+      <button type="button" class="btn-ghost-nav" id="btn-step-back" disabled title="Voltar (Esc)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Voltar</span>
+        <kbd class="kbd-subtle">Esc</kbd>
+      </button>
+
+      <!-- Status de Autosave -->
+      <div class="autosave-tag">
+        <span class="save-dot"></span>
+        <span id="status-autosave-label">Salvo automaticamente</span>
+      </div>
+
+      <!-- Continuar -->
+      <button type="button" class="btn-primary-pill" id="btn-step-continue" title="Continuar (Enter)">
+        <span id="btn-continue-label">Continuar</span>
+        <kbd class="btn-kbd">↵ Enter</kbd>
+      </button>
+
+    </div>
+  </footer>
+
+  <!-- ===================================================================
+       MODAL SIMPLES: ÍNDICE DAS 30 PERGUNTAS
+       =================================================================== -->
+  <div class="minimal-modal-backdrop" id="sheet-backdrop" aria-hidden="true">
+    <div class="minimal-modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-index-title">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="modal-index-title">Índice das 30 Perguntas</h3>
+          <p class="modal-subtitle">Selecione qualquer pergunta para ir direto a ela</p>
+        </div>
+        <button type="button" class="btn-modal-close" id="btn-close-sheet" aria-label="Fechar índice">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-scroll-list" id="sheet-questions-list">
+        <!-- Injetado dinamicamente -->
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
